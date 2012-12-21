@@ -29,7 +29,7 @@ module Impressionist
     end
 
     def impressionist_count(options={})
-      impressions(options).count
+      impressions.where(options).count
     end
 
     def user_impressionist_count(user_id)
