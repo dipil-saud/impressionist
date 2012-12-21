@@ -29,34 +29,20 @@ module Impressionist
     end
 
     def impressionist_count(options={})
-      options.reverse_merge!(:filter=>:request_hash, :start_date=>nil, :end_date=>Time.now)
-      imps = options[:start_date].blank? ? impressions : impressions.where("created_at>=? and created_at<=?",options[:start_date],options[:end_date])
-      options[:filter] == :all ? imps.count : imps.count(options[:filter], :distinct => true)
+      impressions(options).count
+    end
+
+    def user_impressionist_count(user_id)
+      impressionist_count(user_id: user_id)
     end
 
     def update_impressionist_counter_cache
       cache_options = self.class.impressionist_counter_cache_options
       column_name = cache_options[:column_name].to_sym
-      count = cache_options[:unique] ? impressionist_count(:filter => :ip_address) : impressionist_count
+      count = impressionist_count
       old_count = send(column_name) || 0
       self.class.update_counters(id, column_name => (count - old_count))
     end
 
-    # OLD METHODS - DEPRECATE IN V0.5
-    def impression_count(start_date=nil,end_date=Time.now)
-      impressionist_count({:start_date=>start_date, :end_date=>end_date, :filter=>:all})
-    end
-
-    def unique_impression_count(start_date=nil,end_date=Time.now)
-      impressionist_count({:start_date=>start_date, :end_date=>end_date, :filter=> :request_hash})
-    end
-
-    def unique_impression_count_ip(start_date=nil,end_date=Time.now)
-      impressionist_count({:start_date=>start_date, :end_date=>end_date, :filter=> :ip_address})
-    end
-
-    def unique_impression_count_session(start_date=nil,end_date=Time.now)
-      impressionist_count({:start_date=>start_date, :end_date=>end_date, :filter=> :session_hash})
-    end
   end
 end

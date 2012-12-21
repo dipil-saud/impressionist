@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sqlite3'
   s.add_development_dependency 'systemu'
   s.authors = ["johnmcaliley"]
-  s.description = "Log impressions from controller actions or from a model"
+  s.description = "Log impressions for a model"
   s.email = "john.mcaliley@gmail.com"
   s.files = `git ls-files`.split("\n")
   s.homepage = "https://github.com/charlotte-ruby/impressionist"
